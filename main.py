@@ -56,6 +56,21 @@ def valid_tabella(tabella: Tabella2D_RO) -> bool:
         valid_others(tabella.get_colonna(i))
     return True
 
+def first_access(tabella,user_id):
+    # la data è nel formato giorno/mese/anno ora:minuti
+    temp = min([datetime.datetime.strptime(x, "%d/%m/%Y %H:%M") for x in tabella.get_colonna(0) if tabella.get_colonna(1)[tabella.get_colonna(0).index(x)]==user_id])
+    
+    res = temp.strftime("%d/%m/%Y %H:%M")
+    return res
+
+def last_access(tabella,user_id):
+    temp = max([datetime.datetime.strptime(x, "%d/%m/%Y %H:%M") for x in tabella.get_colonna(0) if tabella.get_colonna(1)[tabella.get_colonna(0).index(x)]==user_id])
+    res = temp.strftime("%d/%m/%Y %H:%M")
+    return res
+
+def num_access(tabella,user_id):
+    res = len([x for x in tabella.get_colonna(0) if tabella.get_colonna(1)[tabella.get_colonna(0).index(x)]==user_id])
+    return res
 
 if __name__ == "__main__":
     try:
@@ -76,9 +91,6 @@ if __name__ == "__main__":
     valid_tabella(tabella)
 
     users={x for x in tabella.get_colonna(1)}
-    for user in users:
-        first_access=first_access(user)
-        last_access=last_access(user)
-        num_access=num_access(user)
+    final_tab = [[user,first_access(tabella, user),last_access(tabella, user),num_access(tabella, user)] for user in users]
 
-    
+    print("Final Table:", final_tab)
