@@ -1,12 +1,13 @@
 import datetime
 import json
-from typing import Type
 from utilities.griglia_di_liste_RO import Tabella2D_RO
 from dateutil import parser as date_parser  #date_parse è una libreria che riconosce automaticamente tante formattazioni di date 
 
 
-
 def valid_user_id(colonna: list[object]) -> bool:
+    '''
+    Ritorna True se gli id sono validi
+    '''
     for elemento in colonna:
         try:
             n=int(elemento)
@@ -19,6 +20,9 @@ def valid_user_id(colonna: list[object]) -> bool:
     return True
 
 def valid_data(colonna: list[object]) -> bool:
+    '''
+    Ritorna True se le date sono valide
+    '''
     for elemento in colonna:
         try:
             date_parser.parse(str(elemento)) #formattazione automatica della data 
@@ -28,6 +32,9 @@ def valid_data(colonna: list[object]) -> bool:
     return True
 
 def valid_ip(colonna: list[object]) -> bool:
+    '''
+    Ritorna True se gli ip sono validi
+    '''    
     for elemento in colonna:
         if not isinstance(elemento, str):
             raise TypeError("L'ip non è una stringa")
@@ -39,6 +46,9 @@ def valid_ip(colonna: list[object]) -> bool:
     return True
 
 def valid_others(colonna: list[object]) -> bool:
+    '''
+    Ritorna True se tutte le altre colonne sono valide
+    '''    
     for elemento in colonna:
         if not isinstance(elemento, str):
             raise TypeError("La colonna non è una stringa")
@@ -46,6 +56,9 @@ def valid_others(colonna: list[object]) -> bool:
 
 
 def valid_tabella(tabella: Tabella2D_RO) -> bool:
+    '''
+    Funzione che valida tutta la tabella
+    '''
     if not valid_user_id(tabella.get_colonna(1)):
         return False
     if not valid_data(tabella.get_colonna(0)):
@@ -57,9 +70,7 @@ def valid_tabella(tabella: Tabella2D_RO) -> bool:
     return True
 
 def first_access(tabella,user_id):
-    # la data è nel formato giorno/mese/anno ora:minuti
     temp = min([datetime.datetime.strptime(x, "%d/%m/%Y %H:%M") for x in tabella.get_colonna(0) if tabella.get_colonna(1)[tabella.get_colonna(0).index(x)]==user_id])
-    
     res = temp.strftime("%d/%m/%Y %H:%M")
     return res
 
@@ -79,15 +90,7 @@ if __name__ == "__main__":
         print("Errore nel caricamento del file JSON: ", e)
         exit(1)
 
-    
     tabella = Tabella2D_RO(json_data)
-    print("Dimensioni della tabella: ", tabella.size())
-    print("Elemento (0, 0): ", tabella.get_cell(0, 0))
-    print("Riga 0: ", tabella.get_riga(0))
-    print("Colonna 0: ", tabella.get_colonna(1))
-    print("Validità degli user id: ", valid_user_id(tabella.get_colonna(1)))
-    print("Valità delle date:", valid_data(tabella.get_colonna(0)))
-    print("Valid ip:", valid_ip(tabella.get_colonna(7)))
     valid_tabella(tabella)
 
     users={x for x in tabella.get_colonna(1)}
