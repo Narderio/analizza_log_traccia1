@@ -1,5 +1,8 @@
+import datetime
 import json
 from utilities.griglia_di_liste_RO import Tabella2D_RO
+from dateutil import parser as date_parser  #date_parse è una libreria che riconosce automaticamente tante formattazioni di date 
+
 
 
 def valid_user_id(colonna: list[object]) -> bool:
@@ -12,15 +15,15 @@ def valid_user_id(colonna: list[object]) -> bool:
                 raise ValueError("L'identificativo dell'utente deve essere un numero intero non negativo")
         except ValueError:
             raise ValueError("L'identificativo dell'utente deve essere un numero intero non negativo")
-'''
+
 def valid_data(colonna: list[object]) -> bool:
     for elemento in colonna:
         try:
-            datetime.strptime(elemento, "%d/%m/%Y %H:%M")
+            date_parser.parse(str(elemento)) #formattazione automatica della data 
             return True
-        except ValueError:
-            raise ValueError("La data deve essere in formato dd/mm/yyyy hh:mm")
-
+        except (ValueError, TypeError):
+            raise ValueError(f"La data '{elemento}' non è in un formato valido")
+'''
 def valid_ip(colonna: list[object]) -> bool:
     for elemento in colonna:
         if not isinstance(elemento, str):
@@ -53,5 +56,7 @@ if __name__ == "__main__":
     print("Riga 0: ", tabella.get_riga(0))
     print("Colonna 0: ", tabella.get_colonna(1))
     print("Validità degli user id: ", valid_user_id(tabella.get_colonna(1)))
+    print("Valità delle date:", valid_data(tabella.get_colonna(0)))
+    
     #valid_tabella(tabella)
     
