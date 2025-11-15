@@ -34,10 +34,17 @@ def valid_ip(colonna: list[object]) -> bool:
         else:
             if len([x for x in elemento.split('.')if x!=''])==4 and elemento.count('.')==3:
                 continue
-            raise TypeError("L'ip non è una stringa nel formato (x.x.x.x)")            
+            print("Elemento:", elemento)
+            raise TypeError(f"L'ip {elemento} non è una stringa nel formato (x.x.x.x)")            
     return True
 
-'''
+def valid_others(colonna: list[object]) -> bool:
+    for elemento in colonna:
+        if not isinstance(elemento, str):
+            raise TypeError("La colonna non è una stringa")
+    return True
+
+
 def valid_tabella(tabella: Tabella2D_RO) -> bool:
     if not valid_user_id(tabella.get_colonna(1)):
         return False
@@ -45,10 +52,10 @@ def valid_tabella(tabella: Tabella2D_RO) -> bool:
         return False
     if not valid_ip(tabella.get_colonna(7)):
         return False
-    if not valid_others(tabella):
-        return False
+    for i in range(2,7):    
+        valid_others(tabella.get_colonna(i))
     return True
-'''
+
 
 if __name__ == "__main__":
     try:
@@ -66,5 +73,5 @@ if __name__ == "__main__":
     print("Validità degli user id: ", valid_user_id(tabella.get_colonna(1)))
     print("Valità delle date:", valid_data(tabella.get_colonna(0)))
     print("Valid ip:", valid_ip(tabella.get_colonna(7)))
-    #valid_tabella(tabella)
+    valid_tabella(tabella)
     
