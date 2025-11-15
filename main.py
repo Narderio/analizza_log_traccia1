@@ -74,4 +74,11 @@ if __name__ == "__main__":
     print("Valità delle date:", valid_data(tabella.get_colonna(0)))
     print("Valid ip:", valid_ip(tabella.get_colonna(7)))
     valid_tabella(tabella)
+
+    users={x for x in tabella.get_colonna(1)}
+    for user in users:
+        first_access=first_access(user)
+        last_access=last_access(user)
+        num_access=num_access(user)
+
     
